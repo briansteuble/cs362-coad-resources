@@ -6,11 +6,11 @@ class Organization < ApplicationRecord
   enum transportation: [:yes, :no, :maybe]
 
   after_initialize :set_default_status, :if => :new_record?
-
+  ## Here is what I used to write my relationship tests
   has_many :users
   has_many :tickets
   has_and_belongs_to_many :resource_categories
-
+  ####################################################
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates_presence_of :email, :name, :phone, :status, :primary_name, :secondary_name, :secondary_phone
   validates_length_of :email, minimum: 1, maximum: 255, on: :create
