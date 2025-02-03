@@ -68,7 +68,6 @@ RSpec.describe Organization, type: :model do
   end
 
   describe "validation tests" do
-    ## presence
     it "validates presence of email" do
       expect(org).to validate_presence_of(:email)
     end
