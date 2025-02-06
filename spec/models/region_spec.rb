@@ -2,11 +2,11 @@ require 'rails_helper'
 
 RSpec.describe Region, type: :model do
 
-  let (:reg) {Region.new}
+  let (:reg) { build(:region) }
 
   describe "attribute tests" do
     it "exists" do
-      Region.new
+      expect(build(:region)).to be_a(Region)
     end
 
     it "responds to name" do
@@ -18,9 +18,8 @@ RSpec.describe Region, type: :model do
     end
 
     it "has a string representation that is its name" do
-      name = 'Mt. Hood'
-      region = Region.new(name: name)
-      result = region.to_s
+      reg.name = 'Mt. Hood'
+      expect(reg.to_s).to eq 'Mt. Hood'
     end
 
   end
@@ -54,8 +53,8 @@ RSpec.describe Region, type: :model do
     end
 
     it "returns the existing unspecified region if it exists" do
-      existing_region = Region.create!(name: "Unspecified")
-      expect(Region.unspecified).to eq existing_region
+      create(:region, name: "Unspecified")  
+      expect(Region.unspecified.name).to eq "Unspecified"
     end
   end
 

@@ -2,12 +2,12 @@ require 'rails_helper'
 
 RSpec.describe Organization, type: :model do
 
-  let (:org) {Organization.new}
+  let (:org) { build(:organization) }
 
 
   describe "attribute tests" do
     it "exists" do
-      Organization.new
+      expect(build(:organization)).to be_a(Organization)
     end
 
     it "responds to name" do
@@ -129,7 +129,7 @@ RSpec.describe Organization, type: :model do
     end
   
     it "sets default status to 'submitted'" do
-      new_org = Organization.new
+      new_org = build(:organization, status: nil)  
       new_org.set_default_status
       expect(new_org.status).to eq "submitted"
     end

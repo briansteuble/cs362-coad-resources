@@ -1,9 +1,9 @@
 FactoryBot.define do
   factory :region do
-    name {"Region name"}
+    name { "Test Region" }
   end
-
 end
+
 
 #let (:region) {FactoryBot.build_stubbed(:region)}
 #let (:region) {FactoryBot.build_stubbed(:region, name: 'asdsad')}

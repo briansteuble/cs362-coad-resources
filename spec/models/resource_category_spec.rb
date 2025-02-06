@@ -2,10 +2,10 @@ require 'rails_helper'
 
 RSpec.describe ResourceCategory, type: :model do
 
-  let (:rec) {ResourceCategory.new}
+  let (:rec) { build(:resource_category) }
   describe "attribute tests" do
     it "exists" do
-      ResourceCategory.new
+      expect(build(:resource_category)).to be_a(ResourceCategory)
     end
 
     it "responds to name" do
@@ -74,23 +74,23 @@ RSpec.describe ResourceCategory, type: :model do
     end
 
     it "returns the existing unspecified resource category if it exists" do
-      existing_category = ResourceCategory.create!(name: "Unspecified")
-      expect(ResourceCategory.unspecified).to eq existing_category
+      create(:resource_category, name: "Unspecified")  
+      expect(ResourceCategory.unspecified.name).to eq "Unspecified"
     end
   end
 
   describe "scope tests" do
     it "scopes active resource categories" do
-      active_category = ResourceCategory.create!(name: "Active Category", active: true)
-      inactive_category = ResourceCategory.create!(name: "Inactive Category", active: false)
+      active_category = create(:resource_category, name: "Active Category", active: true)
+      inactive_category = create(:resource_category, name: "Inactive Category", active: false)
 
       expect(ResourceCategory.active).to include(active_category)
       expect(ResourceCategory.active).to_not include(inactive_category)
     end
 
     it "scopes inactive resource categories" do
-      active_category = ResourceCategory.create!(name: "Active Category", active: true)
-      inactive_category = ResourceCategory.create!(name: "Inactive Category", active: false)
+      active_category = create(:resource_category, name: "Active Category", active: true)
+      inactive_category = create(:resource_category, name: "Inactive Category", active: false)
 
       expect(ResourceCategory.inactive).to include(inactive_category)
       expect(ResourceCategory.inactive).to_not include(active_category)
