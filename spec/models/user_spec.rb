@@ -2,12 +2,14 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
 
-  let (:user) {User.new(email: "example@gmail.com")}
+  let (:user) { build(:user, email: "example@gmail.com") }
+  let (:admin_user) {build(:user, :admin) }
+  let (:org_user) { build(:user, :with_organization) }
 
   describe "attributes test" do
 
   it "exists" do
-    User.new
+    expect(user).to be_a(User)
   end
 
   it "responds to email" do
@@ -60,12 +62,28 @@ end
 
   end
 
-  describe "member function tests" do
+  describe "role based tests" do
 
     it "sets default user role to :organizition" do
       user.set_default_role
       expect(user.role).to eq("organization")
     end
+
+    it "creates an admin user with role :admin" do
+      expect(admin_user.role).to eq("admin")
+    end
+
+    it "creates an organization user with role :organization" do
+      expect(user.role).to eq("organization")
+    end
+
+    it "creates a user with an associated organization" do
+      expect(org_user.organization).to be_present
+    end
+
+  end
+
+  describe "member function tests" do
 
     it "converts user email to string" do
       expect(user.to_s).to eq("example@gmail.com")

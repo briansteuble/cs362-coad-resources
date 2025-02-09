@@ -2,12 +2,12 @@ require 'rails_helper'
 
 RSpec.describe Ticket, type: :model do
 
-  let (:ticket) {Ticket.new(id: 123)}
+  let (:ticket) {build(:ticket)}
 
 describe "attributes tests" do
 
   it "exists" do
-    Ticket.new
+    expect(ticket).to be_a(Ticket)
   end
 
   it "responds to name" do
@@ -77,7 +77,7 @@ end
 describe "member function tests" do
 
   it "converts to string" do
-    expect(ticket.to_s).to eq "Ticket 123"
+    expect(ticket.to_s).to eq "Ticket #{ticket.id}"
   end
 
   it "a new ticket is set to open by default" do
@@ -97,72 +97,17 @@ end
 
 describe "scope tests" do
 
-  let!(:region1) { Region.create!(name: "Region 1") }
-  let!(:resource1) { ResourceCategory.create!(name: "Resource 1") }
-  let!(:organization1) { Organization.create!(name: "Org 1", email: "org1@example.com", phone: "+1-555-555-5555", primary_name: "John", secondary_name: "Smith", secondary_phone: "+1-555-555-5555") }
+  let!(:region) { create(:region, name: "Region 1") }
+  let!(:resource_category) { create(:resource_category, name: "Resource 1") }
+  let!(:organization) { create(:organization, name: "Org 1") }
   
-  let!(:open_ticket) { 
-    Ticket.create!(
-      name: "Open Ticket", 
-      closed: false, 
-      organization_id: nil, 
-      region_id: region1.id, 
-      resource_category_id: resource1.id, 
-      phone: "+1-555-555-5555"
-    ) 
-  }
-  
-  let!(:closed_ticket) { 
-    Ticket.create!(
-      name: "Closed Ticket", 
-      closed: true, 
-      region_id: region1.id, 
-      resource_category_id: resource1.id, 
-      phone: "+1-555-555-5555"
-    ) 
-  }
-  
-  let!(:assigned_ticket) { 
-    Ticket.create!(
-      name: "Assigned Ticket", 
-      closed: false, 
-      organization_id: organization1.id, 
-      region_id: region1.id, 
-      resource_category_id: resource1.id, 
-      phone: "+1-555-555-5555"
-    ) 
-  }
-  
-  let!(:closed_org_ticket) { 
-    Ticket.create!(
-      name: "Closed Org Ticket", 
-      closed: true, 
-      organization_id: organization1.id, 
-      region_id: region1.id, 
-      resource_category_id: resource1.id, 
-      phone: "+1-555-555-5555"
-    ) 
-  }
+  let!(:open_ticket) { create(:ticket, closed: false, organization: nil, region: region, resource_category: resource_category) }
+  let!(:closed_ticket) { create(:ticket, closed: true, region: region, resource_category: resource_category) }
+  let!(:assigned_ticket) { create(:ticket, closed: false, organization: organization, region: region, resource_category: resource_category) }
+  let!(:closed_org_ticket) { create(:ticket, closed: true, organization: organization, region: region, resource_category: resource_category) }
+  let!(:region_ticket) { create(:ticket, closed: false, region: region, resource_category: resource_category) }
+  let!(:resource_ticket) { create(:ticket, closed: false, region: region, resource_category: resource_category) }
 
-  let!(:region_ticket) { 
-    Ticket.create!(
-      name: "Region Ticket",
-      closed: false,
-      region_id: region1.id, 
-      resource_category_id: resource1.id,
-      phone: "+1-555-555-5555"
-    ) 
-  }
-  
-  let!(:resource_ticket) { 
-    Ticket.create!(
-      name: "Resource Ticket",
-      closed: false,
-      region_id: region1.id,
-      resource_category_id: resource1.id, 
-      phone: "+1-555-555-5555"
-    ) 
-  }
  # scope :open, -> () { where closed: false, organization_id: nil }
  # scope :closed, -> () { where closed: true }
  # scope :all_organization, -> () { where(closed: false).where.not(organization_id: nil) }
@@ -187,21 +132,21 @@ describe "scope tests" do
   end
 
   it "returns only tickets assigned to a specific organization (closed: false)" do
-    expect(Ticket.organization(organization1.id)).to include(assigned_ticket)
-    expect(Ticket.organization(organization1.id)).not_to include(open_ticket, closed_ticket, closed_org_ticket)
+    expect(Ticket.organization(organization.id)).to include(assigned_ticket)
+    expect(Ticket.organization(organization.id)).not_to include(open_ticket, closed_ticket, closed_org_ticket)
   end
 
   it "returns only closed tickets for a specific organization" do
-    expect(Ticket.closed_organization(organization1.id)).to include(closed_org_ticket)
-    expect(Ticket.closed_organization(organization1.id)).not_to include(open_ticket, assigned_ticket, closed_ticket)
+    expect(Ticket.closed_organization(organization.id)).to include(closed_org_ticket)
+    expect(Ticket.closed_organization(organization.id)).not_to include(open_ticket, assigned_ticket, closed_ticket)
   end
 
   it "returns only tickets assigned to a specific region" do
-    expect(Ticket.region(region1.id)).to match_array([open_ticket, assigned_ticket, closed_ticket, closed_org_ticket, region_ticket, resource_ticket])
+    expect(Ticket.region(region.id)).to match_array([open_ticket, assigned_ticket, closed_ticket, closed_org_ticket, region_ticket, resource_ticket])
   end
 
   it "returns only tickets assigned to a specific resource category" do
-    expect(Ticket.resource_category(resource1.id)).to match_array([open_ticket, assigned_ticket, closed_ticket, closed_org_ticket, region_ticket, resource_ticket])  
+    expect(Ticket.resource_category(resource_category.id)).to match_array([open_ticket, assigned_ticket, closed_ticket, closed_org_ticket, region_ticket, resource_ticket])  
   end
     
   end
