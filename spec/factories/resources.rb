@@ -1,6 +1,7 @@
 FactoryBot.define do
   factory :resource_category do
-    name { "Test Resource" }
+    sequence(:name) { |n| "Test Resource #{n}" }
     active { true }
   end
 end
+

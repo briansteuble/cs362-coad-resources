@@ -40,6 +40,7 @@ group :development do
   gem 'web-console', '~> 3.7.0'
 end
 
+
 group :test do
   gem 'capybara', '~> 3.38.0'
   gem 'database_cleaner', '~> 2.0.1'
@@ -47,6 +48,7 @@ group :test do
   gem 'shoulda-matchers', '~> 4.5'
   gem 'simplecov', '~> 0.22.0', require: false
   gem 'webdrivers', '~> 3.0'
+  gem 'rails-controller-testing'
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

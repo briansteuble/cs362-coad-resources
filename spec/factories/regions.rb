@@ -1,8 +1,9 @@
 FactoryBot.define do
   factory :region do
-    name { "Test Region" }
+    sequence(:name) { |n| "Region #{n}" }
   end
 end
+
 
 
 #let (:region) {FactoryBot.build_stubbed(:region)}
