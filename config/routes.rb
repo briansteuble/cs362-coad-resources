@@ -36,9 +36,10 @@ Rails.application.routes.draw do
     end
 
     resources :regions
-
+    resources :users, only: :index
     get '/dashboard' => 'dashboard#index'
     get '/new_organization_application' => 'organizations#new'
     get '/organization_application_submitted' => 'static_pages#organization_application_submitted'
+    
   end
 end
